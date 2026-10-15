@@ -11,7 +11,6 @@
   const head = { x: 0, y: 0 };
 
   // ── build ────────────────────────────────────────────
-  document.getElementById('title').innerHTML = D.title.map((l) => `<span>${l}</span>`).join('');
   me.src = D.me.image;
 
   const rand = mulberry32(7);
@@ -47,6 +46,8 @@
       pos: { x: 0, y: 0 }, w: 0, h: 0,
       dragging: false,
       phase: rand() * Math.PI * 2,
+      // entrance: held at the head until `release`, then springs out
+      held: true, release: 0, appear: 0,
     };
   }
 
@@ -58,9 +59,9 @@
     const k = knots[b.id];
     k.children.forEach((card, i) => {
       // head → knot: a loose bundle, one strand per card
-      addThread(() => headPoint(i), () => k.pos, (rand() - 0.5) * 0.28, i === 0 ? 1.3 : 1);
+      addThread(() => headPoint(i), () => k.pos, (rand() - 0.5) * 0.28, i === 0 ? 1.3 : 1).owner = k;
       // knot → card
-      addThread(() => k.pos, () => card.pos, (rand() - 0.5) * 0.3, 1.1);
+      addThread(() => k.pos, () => card.pos, (rand() - 0.5) * 0.3, 1.1).owner = card;
     });
   }
 
@@ -73,7 +74,9 @@
     const path = document.createElementNS(SVGNS, 'path');
     path.setAttribute('stroke-width', width);
     svg.appendChild(path);
-    threads.push({ a, b, bow, path, c: null, cv: { x: 0, y: 0 } });
+    const th = { a, b, bow, path, c: null, cv: { x: 0, y: 0 }, owner: null };
+    threads.push(th);
+    return th;
   }
 
   function idealControl(t) {
@@ -92,19 +95,13 @@
     W = stage.clientWidth;
     H = stage.clientHeight;
     mobile = W < 700;
-    cardScale = mobile ? W / 390 : clamp(W / 1440, 0.7, 1.3);
+    cardScale = mobile ? W / 390 : clamp(Math.min(W / 1440, H / 900), 0.6, 1.5);
 
+    // the figure sits bottom-centre; the web fills the space around it
     const ratio = 1420 / 705;
-    let h, right;
-    if (mobile) {
-      h = Math.min(H * 0.42, W * 0.5 * ratio);
-      right = W * 0.02;
-    } else {
-      h = Math.min(H * 0.74, W * 0.32 * ratio);
-      right = W * 0.07;
-    }
+    const h = mobile ? Math.min(H * 0.42, W * 0.5 * ratio) : Math.min(H * 0.64, W * 0.22 * ratio);
     const w = h / ratio;
-    const left = W - right - w;
+    const left = (W - w) / 2;
     const top = H - h;
     Object.assign(me.style, { width: `${w}px`, left: `${left}px`, top: `${top}px` });
     head.x = left + D.me.head[0] * w;
@@ -194,29 +191,42 @@
     last = now;
     t += dt;
 
+    for (const n of [...Object.values(knots), ...cards]) {
+      if (n.held) {
+        if (t >= n.release) n.held = false; else holdAtHead(n);
+      }
+      if (!n.held && n.appear < 1) n.appear = Math.min(1, n.appear + dt * 2.2);
+    }
+
     // knots feel their dragged cards a little; cards follow their knot
     for (const id in knots) {
       const k = knots[id];
       let tx = 0, ty = 0;
       for (const c of k.children) if (c.dragging) { tx += c.off.x * 0.22; ty += c.off.y * 0.22; }
-      spring(k, tx, ty, 150, 11, dt);
+      if (!k.held) spring(k, tx, ty, 150, 11, dt);
     }
-    for (const n of cards) spring(n, n.knot.off.x * 0.6, n.knot.off.y * 0.6, 120, 8.5, dt);
+    for (const n of cards) {
+      if (!n.held) spring(n, n.knot.appear < 1 ? 0 : n.knot.off.x * 0.6, n.knot.appear < 1 ? 0 : n.knot.off.y * 0.6, n.appear < 1 ? 60 : 120, n.appear < 1 ? 7 : 8.5, dt);
+    }
 
     const sway = reduceMotion ? 0 : 1;
     for (const id in knots) {
       const k = knots[id];
-      k.pos.x = k.home.x + k.off.x;
-      k.pos.y = k.home.y + k.off.y;
+      k.pos.x = k.home.x + k.off.x + Math.sin(t * 0.3 + k.phase) * 4 * sway;
+      k.pos.y = k.home.y + k.off.y + Math.cos(t * 0.24 + k.phase) * 3 * sway;
       k.el.style.transform = `translate(${k.pos.x - k.dot.x}px, ${k.pos.y - k.dot.y}px)`;
+      k.el.style.opacity = ease(k.appear);
     }
     for (const n of cards) {
-      const sx = Math.sin(t * 0.7 + n.phase) * 2.5 * sway;
-      const sy = Math.cos(t * 0.55 + n.phase) * 2 * sway;
+      // slow float: each card drifts on its own rhythm
+      const sx = (Math.sin(t * 0.33 + n.phase) * 9 + Math.sin(t * 0.71 + n.phase * 2) * 3) * sway;
+      const sy = (Math.cos(t * 0.27 + n.phase * 1.3) * 8 + Math.sin(t * 0.6 + n.phase) * 2) * sway;
       n.pos.x = n.home.x + n.off.x + sx;
       n.pos.y = n.home.y + n.off.y + sy;
-      const rot = n.data.rot + clamp(n.vel.x * 0.012, -12, 12) + Math.sin(t * 0.5 + n.phase) * 0.6 * sway;
-      n.el.style.transform = `translate(${n.pos.x - n.w / 2}px, ${n.pos.y - n.h / 2}px) rotate(${rot}deg)`;
+      const rot = n.data.rot + clamp(n.vel.x * 0.012, -12, 12) + Math.sin(t * 0.4 + n.phase) * 1.4 * sway;
+      const sc = 0.15 + 0.85 * ease(n.appear);
+      n.el.style.transform = `translate(${n.pos.x - n.w / 2}px, ${n.pos.y - n.h / 2}px) rotate(${rot}deg) scale(${sc})`;
+      n.el.style.opacity = Math.min(1, n.appear * 2.5);
     }
 
     for (const th of threads) {
@@ -227,10 +237,28 @@
       th.c.x += th.cv.x * dt;
       th.c.y += th.cv.y * dt;
       const a = th.a(), b = th.b();
+      th.path.style.opacity = th.owner ? Math.min(1, th.owner.appear * 3) : 1;
       th.path.setAttribute('d', `M${a.x.toFixed(1)},${a.y.toFixed(1)} Q${th.c.x.toFixed(1)},${th.c.y.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`);
     }
 
     requestAnimationFrame(step);
+  }
+
+  // Everything starts tucked into the head, then floats out branch by branch.
+  function startEntrance() {
+    const order = [];
+    D.buckets.forEach((b) => order.push(knots[b.id]));
+    D.buckets.forEach((b) => knots[b.id].children.forEach((c) => order.push(c)));
+    order.forEach((n, i) => {
+      if (reduceMotion) { n.held = false; n.appear = 1; return; }
+      n.release = 0.25 + i * 0.075 + (n.kind === 'card' ? 0.2 : 0);
+    });
+  }
+
+  function holdAtHead(n) {
+    n.off.x = head.x - n.home.x;
+    n.off.y = head.y - n.home.y;
+    n.vel.x = n.vel.y = 0;
   }
 
   // Damped spring pulling a node's offset back toward (tx, ty).
@@ -320,6 +348,7 @@
 
   // ── helpers ──────────────────────────────────────────
   function bucketLabel(id) { return D.buckets.find((b) => b.id === id).label; }
+  function ease(x) { return 1 - Math.pow(1 - x, 3); }
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
   function mulberry32(a) {
     return () => {
@@ -332,6 +361,7 @@
 
   // ── go ───────────────────────────────────────────────
   layout();
+  startEntrance();
   window.addEventListener('resize', layout);
   if (document.fonts) document.fonts.ready.then(layout);
   requestAnimationFrame((now) => { last = now; step(now); });

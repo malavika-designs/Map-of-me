@@ -23,7 +23,7 @@ Buckets (the knots the threads branch from) are set at the top of `data.js`. Add
 
 | file | what it does |
 | --- | --- |
-| `data.js` | title, buckets, cards: the only file to edit for content |
+| `data.js` | buckets and cards: the only file to edit for content |
 | `app.js` | layout, threads, spring physics, drag, card viewer |
 | `styles.css` | look and feel |
 | `assets/me.png` | background-removed cut-out |
