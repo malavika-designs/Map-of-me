@@ -98,7 +98,7 @@
     cardScale = mobile ? W / 390 : clamp(Math.min(W / 1440, H / 900), 0.6, 1.5);
 
     // the figure sits bottom-centre; the web fills the space around it
-    const ratio = 1420 / 705;
+    const ratio = me.naturalWidth ? me.naturalHeight / me.naturalWidth : 2;
     const h = mobile ? Math.min(H * 0.42, W * 0.5 * ratio) : Math.min(H * 0.64, W * 0.22 * ratio);
     const w = h / ratio;
     const left = (W - w) / 2;
@@ -363,6 +363,7 @@
   layout();
   startEntrance();
   window.addEventListener('resize', layout);
+  me.addEventListener('load', layout);
   if (document.fonts) document.fonts.ready.then(layout);
   requestAnimationFrame((now) => { last = now; step(now); });
 })();

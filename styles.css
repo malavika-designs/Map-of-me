@@ -5,8 +5,8 @@
   --blue: #1238e8;
   --muted: #6b6b6b;
   --serif: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
-  --sans: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
-  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  --sans: 'Geist', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
 }
 
 * { box-sizing: border-box; }
@@ -225,7 +225,7 @@ html, body {
 
 /* ── mobile ────────────────────────────────────────── */
 @media (max-width: 699px) {
-  .knot-label { font-size: 19px; }
+  .knot-label { font-size: 17px; }
   .knot-dot { width: 7px; height: 7px; }
   .hint { display: none; }
 

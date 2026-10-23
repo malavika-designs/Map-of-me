@@ -7,16 +7,16 @@
 
 window.MAP_DATA = {
   me: {
-    image: 'assets/me.png',
+    image: 'assets/me.webp',
     // Where the strings leave the head, as a fraction of the cut-out image.
-    head: [0.38, 0.03],
+    head: [0.388, 0.018],
   },
 
   buckets: [
     { id: 'making',     label: 'making',              pos: [36, 48], posMobile: [34, 37] },
     { id: 'consuming',  label: 'consuming',           pos: [66, 24], posMobile: [64, 36] },
-    { id: 'references', label: 'references I live by', pos: [30, 24], posMobile: [28, 18] },
-    { id: 'taste',      label: 'taste',               pos: [68, 50], posMobile: [74, 19] },
+    { id: 'references', label: 'pop culture quotes I live by', pos: [30, 24], posMobile: [6, 17] },
+    { id: 'appreciating', label: 'appreciating',       pos: [68, 50], posMobile: [74, 19] },
   ],
 
   cards: [
@@ -82,18 +82,18 @@ window.MAP_DATA = {
       pos: [12, 36], w: 210, rot: 1.5, posMobile: [16, 26], wMobile: 100,
     },
 
-    // ── taste ───────────────────────────────────────────────
+    // ── appreciating ─────────────────────────────────────────────
     {
-      id: 'taste-01', bucket: 'taste',
+      id: 'appreciating-01', bucket: 'appreciating',
       title: 'Colour of the month',
-      image: 'assets/cards/taste-01.svg', ratio: 1.19,
+      image: 'assets/cards/appreciating-01.svg', ratio: 1.19,
       why: 'Placeholder. A colour I keep noticing everywhere and adding to everything.',
       pos: [89, 44], w: 170, rot: -2.5, posMobile: [87, 9], wMobile: 72,
     },
     {
-      id: 'taste-02', bucket: 'taste',
+      id: 'appreciating-02', bucket: 'appreciating',
       title: 'An object I love',
-      image: 'assets/cards/taste-02.svg', ratio: 0.75,
+      image: 'assets/cards/appreciating-02.svg', ratio: 0.75,
       why: 'Placeholder. A small thing that says a lot about what I like.',
       pos: [78, 76], w: 220, rot: 2, posMobile: [86, 27], wMobile: 84,
     },
