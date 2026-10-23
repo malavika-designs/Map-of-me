@@ -57,17 +57,20 @@
   const threads = [];
   for (const b of D.buckets) {
     const k = knots[b.id];
-    k.children.forEach((card, i) => {
-      // head → knot: a loose bundle, one strand per card
-      addThread(() => headPoint(i), () => k.pos, (rand() - 0.5) * 0.28, i === 0 ? 1.3 : 1).owner = k;
-      // knot → card
+    // one thread from the head to each branch knot…
+    const bi = D.buckets.indexOf(b);
+    addThread(() => headPoint(bi), () => k.pos, (rand() - 0.5) * 0.24, 1.4).owner = k;
+    // …which then splits out to that branch's cards
+    k.children.forEach((card) => {
       addThread(() => k.pos, () => card.pos, (rand() - 0.5) * 0.3, 1.1).owner = card;
     });
   }
 
+  // Threads leave the head side by side, a few px apart.
   function headPoint(i) {
-    const spread = mobile ? 4 : 7;
-    return { x: head.x + (i - 1) * spread, y: head.y + Math.abs(i - 1) * 2 };
+    const spread = mobile ? 3 : 5;
+    const mid = (D.buckets.length - 1) / 2;
+    return { x: head.x + (i - mid) * spread, y: head.y + Math.abs(i - mid) * 2 };
   }
 
   function addThread(a, b, bow, width) {
@@ -279,10 +282,24 @@
   const vImg = document.getElementById('viewer-img');
   const closeBtn = document.getElementById('viewer-close');
   let open = null;
+  let closing = null; // the close animation still running, if any
+
+  // Drop every running or filled animation on the viewer so a fresh open
+  // never inherits a half-finished fade (that's what hid the text).
+  function resetViewer() {
+    if (closing) { closing.onfinish = null; closing = null; }
+    for (const el of [paper, sheet, vCard, vText]) el.getAnimations().forEach((a) => a.cancel());
+    vImg.onload = null;
+    paper.style.pointerEvents = viewer.style.pointerEvents = '';
+  }
 
   function openCard(n) {
     if (open) return;
+    const prev = cards.find((c) => c.el.classList.contains('is-open'));
+    if (prev && prev !== n) prev.el.classList.remove('is-open');
+    resetViewer();
     open = n;
+    openedAt = performance.now();
     const d = n.data;
     vImg.src = d.image;
     vImg.alt = d.title;
@@ -290,13 +307,13 @@
     document.getElementById('viewer-title').textContent = d.title;
     document.getElementById('viewer-why').textContent = d.why;
 
-    const from = n.el.getBoundingClientRect();
     paper.hidden = false;
     viewer.hidden = false;
     n.el.classList.add('is-open');
 
     const go = () => {
-      const flip = flipFrom(from, n);
+      if (open !== n) return;
+      const flip = flipFrom(n);
       const ease = 'cubic-bezier(.2, 1.15, .35, 1)';
       vCard.animate([{ transform: flip }, { transform: 'none' }], { duration: reduceMotion ? 1 : 640, easing: ease });
       paper.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: 'ease-out' });
@@ -317,24 +334,24 @@
     if (!open) return;
     const n = open;
     open = null;
-    const flip = flipFrom(n.el.getBoundingClientRect(), n);
+    const flip = flipFrom(n);
     const dur = reduceMotion ? 1 : 380;
+    // let clicks fall through to the map while the paper fades away
+    paper.style.pointerEvents = viewer.style.pointerEvents = 'none';
     vText.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: 'forwards' });
     paper.animate([{ opacity: 1 }, { opacity: 0 }], { duration: dur, easing: 'ease-in', fill: 'forwards' });
-    const anim = vCard.animate([{ transform: 'none' }, { transform: flip }], { duration: dur, easing: 'cubic-bezier(.5, 0, .2, 1)', fill: 'forwards' });
-    anim.onfinish = () => {
+    closing = vCard.animate([{ transform: 'none' }, { transform: flip }], { duration: dur, easing: 'cubic-bezier(.5, 0, .2, 1)', fill: 'forwards' });
+    closing.onfinish = () => {
+      resetViewer();
       paper.hidden = true;
       viewer.hidden = true;
       n.el.classList.remove('is-open');
-      paper.getAnimations().forEach((a) => a.cancel());
-      vCard.getAnimations().forEach((a) => a.cancel());
-      vText.getAnimations().forEach((a) => a.cancel());
       n.el.focus({ preventScroll: true });
     };
   }
 
   // Transform that makes the viewer card sit exactly on top of the map card.
-  function flipFrom(from, n) {
+  function flipFrom(n) {
     const to = vCard.getBoundingClientRect();
     const s = n.w / to.width;
     const dx = n.pos.x - (to.left + to.width / 2);
@@ -343,7 +360,15 @@
   }
 
   closeBtn.addEventListener('click', closeCard);
-  viewer.addEventListener('click', (e) => { if (e.target === viewer) closeCard(); });
+  // Close on a click on the paper, but only one that started on the paper:
+  // the click that opened the card can land here on some browsers.
+  let openedAt = 0;
+  let downOnPaper = false;
+  viewer.addEventListener('pointerdown', (e) => { downOnPaper = e.target === viewer; });
+  viewer.addEventListener('click', (e) => {
+    if (e.target === viewer && downOnPaper && performance.now() - openedAt > 350) closeCard();
+    downOnPaper = false;
+  });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCard(); });
 
   // ── helpers ──────────────────────────────────────────
