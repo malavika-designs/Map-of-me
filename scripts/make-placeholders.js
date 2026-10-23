@@ -6,9 +6,6 @@ const path = require('path');
 const cards = [
   { id: 'consuming-01',  w: 340, h: 420, bg: '#1F2A44', fg: '#F2C14E', font: 'serif', text: ['NOW', 'READING'] },
   { id: 'consuming-02',  w: 440, h: 300, bg: '#8FB8D9', fg: '#14213D', font: 'hand',  text: ['on repeat', 'lately'] },
-  { id: 'references-01', w: 380, h: 300, bg: '#F6F1E6', fg: '#1B1B1B', font: 'serif', text: ['A LINE', 'I LIVE BY'] },
-  { id: 'references-02', w: 340, h: 340, bg: '#E8572A', fg: '#FFF4E0', font: 'sans',  text: ['NOTHING', 'CHANGES IF', 'NOTHING', 'CHANGES'] },
-  { id: 'references-03', w: 420, h: 280, bg: '#C9B48A', fg: '#7A1E14', font: 'hand',  text: ['advice I', 'keep coming', 'back to'] },
   { id: 'appreciating-01',      w: 320, h: 380, bg: '#F2A7B8', fg: '#7A1238', font: 'sans',  text: ['COLOUR', 'OF THE', 'MONTH'] },
   { id: 'appreciating-02',      w: 400, h: 300, bg: '#3C3A8F', fg: '#F7E9D7', font: 'hand',  text: ['an object', 'i love'] },
 ];
