@@ -22,25 +22,32 @@ window.MAP_DATA = {
   cards: [
     // ── making ──────────────────────────────────────────────
     {
-      id: 'making-01', bucket: 'making',
-      title: 'A thing I made',
-      image: 'assets/cards/making-01.svg', ratio: 0.75,
-      why: 'Placeholder. Something I made that I’m quietly proud of: why it mattered, what I learned making it.',
-      pos: [10, 64], w: 210, rot: -3, posMobile: [40, 47], wMobile: 104,
+      id: 'making-pastels', bucket: 'making',
+      title: 'Exploring pastels',
+      image: 'assets/cards/making-pastels.webp', ratio: 1,
+      why: 'I like trying out different mediums. Right now I’m exploring oil pastels on canvas.',
+      pos: [9, 59], w: 175, rot: -3, posMobile: [12, 41], wMobile: 78,
     },
     {
-      id: 'making-02', bucket: 'making',
-      title: 'Work in progress',
-      image: 'assets/cards/making-02.svg', ratio: 1.22,
-      why: 'Placeholder. The thing on my desk right now. Unfinished on purpose.',
-      pos: [24, 82], w: 150, rot: 2, posMobile: [16, 58], wMobile: 84,
+      id: 'making-bread', bucket: 'making',
+      title: 'Baking bread',
+      image: 'assets/cards/making-bread.webp', ratio: 1,
+      why: 'I love baking, and lately I’ve been learning to make bread, starting with focaccia. I also make a mean banana bread.',
+      pos: [23, 62], w: 175, rot: 2, posMobile: [35, 43], wMobile: 78,
     },
     {
-      id: 'making-03', bucket: 'making',
-      title: 'Sketchbook spread',
-      image: 'assets/cards/making-03.svg', ratio: 0.79,
-      why: 'Placeholder. Where most ideas start before they’re allowed to be good.',
-      pos: [31, 60], w: 170, rot: -1.5, posMobile: [14, 43], wMobile: 92,
+      id: 'making-writing', bucket: 'making',
+      title: 'Writing since I was a kid',
+      image: 'assets/cards/making-writing.webp', ratio: 1,
+      why: 'I’ve been writing since I was a kid. It’s one of the ways I’ve always captured feelings and stories, and built them out.',
+      pos: [10, 84], w: 175, rot: 1.5, posMobile: [12, 54], wMobile: 78,
+    },
+    {
+      id: 'making-ceramics', bucket: 'making',
+      title: 'Painting my own ceramics',
+      image: 'assets/cards/making-ceramics.webp', ratio: 1,
+      why: 'I’m adding new pieces to my kitchen that I’ve painted myself. So far there are two bowls and a mug, with more on the way.',
+      pos: [25, 85], w: 175, rot: -2, posMobile: [33, 55], wMobile: 74,
     },
 
     // ── consuming ───────────────────────────────────────────

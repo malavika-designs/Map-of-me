@@ -4,9 +4,6 @@ const fs = require('fs');
 const path = require('path');
 
 const cards = [
-  { id: 'making-01',     w: 400, h: 300, bg: '#F3B23C', fg: '#1B1B1B', font: 'serif', text: ['A THING', 'I MADE'] },
-  { id: 'making-02',     w: 360, h: 440, bg: '#2F6B4F', fg: '#F6E7C8', font: 'serif', text: ['WORK', 'IN', 'PROGRESS'] },
-  { id: 'making-03',     w: 380, h: 300, bg: '#E9DFCF', fg: '#C2361F', font: 'hand',  text: ['sketchbook', 'spread'] },
   { id: 'consuming-01',  w: 340, h: 420, bg: '#1F2A44', fg: '#F2C14E', font: 'serif', text: ['NOW', 'READING'] },
   { id: 'consuming-02',  w: 440, h: 300, bg: '#8FB8D9', fg: '#14213D', font: 'hand',  text: ['on repeat', 'lately'] },
   { id: 'references-01', w: 380, h: 300, bg: '#F6F1E6', fg: '#1B1B1B', font: 'serif', text: ['A LINE', 'I LIVE BY'] },
