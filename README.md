@@ -10,7 +10,7 @@ No build step. Open `index.html`, or serve the folder:
 python3 -m http.server 8000   # then visit http://localhost:8000
 ```
 
-## Swap a placeholder card
+## Swap or add a card
 
 1. Put the image in `assets/cards/` (jpg, png, webp, gif or svg).
 2. In `data.js`, find the card and change `image`, `title` and `why`.
@@ -27,4 +27,3 @@ Buckets (the knots the threads branch from) are set at the top of `data.js`. Add
 | `app.js` | layout, threads, spring physics, drag, card viewer |
 | `styles.css` | look and feel |
 | `assets/me.webp` | background-removed cut-out |
-| `scripts/make-placeholders.js` | regenerates the placeholder SVGs |

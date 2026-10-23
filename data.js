@@ -1,5 +1,5 @@
 // Everything about the map's content lives here.
-// To swap a placeholder: drop an image into assets/cards/ and change that card's
+// To swap a card: drop an image into assets/cards/ and change that card's
 // `image`, `title` and `why`. `ratio` is height / width of the image.
 //
 // Positions are percentages of the screen: pos = [x%, y%] of the card's centre.
@@ -110,20 +110,34 @@ window.MAP_DATA = {
       pos: [8, 38], w: 160, rot: -1.5, posMobile: [35, 27], wMobile: 70,
     },
 
-    // ── appreciating ─────────────────────────────────────────────
+    // ── appreciating ────────────────────────────────────────
     {
-      id: 'appreciating-01', bucket: 'appreciating',
-      title: 'Colour of the month',
-      image: 'assets/cards/appreciating-01.svg', ratio: 1.19,
-      why: 'Placeholder. A colour I keep noticing everywhere and adding to everything.',
-      pos: [90, 53], w: 170, rot: -2.5, posMobile: [86, 8], wMobile: 68,
+      id: 'appreciating-sleep', bucket: 'appreciating',
+      title: 'Sleep on the Floor',
+      image: 'assets/cards/appreciating-sleep.webp', ratio: 1,
+      why: 'The Lumineers’ Sleep on the Floor is one of my favourite music videos of all time.',
+      pos: [93, 54], w: 160, rot: -2.5, posMobile: [86, 8], wMobile: 64,
     },
     {
-      id: 'appreciating-02', bucket: 'appreciating',
-      title: 'An object I love',
-      image: 'assets/cards/appreciating-02.svg', ratio: 0.75,
-      why: 'Placeholder. A small thing that says a lot about what I like.',
-      pos: [78, 76], w: 220, rot: 2, posMobile: [86, 27], wMobile: 84,
+      id: 'appreciating-cry', bucket: 'appreciating',
+      title: 'Cry Cry Cry',
+      image: 'assets/cards/appreciating-cry.webp', ratio: 1,
+      why: 'I really love Coldplay’s Everyday Life, and Cry Cry Cry is the song from it I keep coming back to.',
+      pos: [80, 67], w: 160, rot: 2, posMobile: [86, 25], wMobile: 64,
+    },
+    {
+      id: 'appreciating-rainier', bucket: 'appreciating',
+      title: 'Learning to love nature',
+      image: 'assets/cards/appreciating-rainier.webp', ratio: 1,
+      why: 'Since moving to Seattle I’ve really grown to appreciate nature, and I’ve been going on more and more hikes.',
+      pos: [92, 84], w: 160, rot: 1.5, posMobile: [86, 60], wMobile: 64,
+    },
+    {
+      id: 'appreciating-hike', bucket: 'appreciating',
+      title: 'The slow burn of a hike',
+      image: 'assets/cards/appreciating-hike.webp', ratio: 1,
+      why: 'What I like most about hiking is the slow burn. Physically, you have no option but to stay present.',
+      pos: [67, 84], w: 160, rot: -2, posMobile: [70, 62], wMobile: 60,
     },
   ],
 };
