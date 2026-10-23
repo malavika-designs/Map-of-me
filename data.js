@@ -52,18 +52,32 @@ window.MAP_DATA = {
 
     // ── consuming ───────────────────────────────────────────
     {
-      id: 'consuming-01', bucket: 'consuming',
-      title: 'Now reading',
-      image: 'assets/cards/consuming-01.svg', ratio: 1.24,
-      why: 'Placeholder. The book on my nightstand and the line that made me fold the corner.',
-      pos: [62, 12], w: 150, rot: 2.5, posMobile: [62, 10], wMobile: 80,
+      id: 'consuming-scher', bucket: 'consuming',
+      title: 'Paula Scher’s posters',
+      image: 'assets/cards/consuming-scher.webp', ratio: 1,
+      why: 'Her poster for The Diva Is Dismissed at the Public Theater. Paula Scher was one of the first designers who truly inspired me, and her work pushed me to experiment with type.',
+      pos: [58, 11], w: 165, rot: 2, posMobile: [60, 8], wMobile: 68,
     },
     {
-      id: 'consuming-02', bucket: 'consuming',
-      title: 'On repeat lately',
-      image: 'assets/cards/consuming-02.svg', ratio: 0.68,
-      why: 'Placeholder. An album / playlist / podcast I can’t stop going back to.',
-      pos: [87, 14], w: 220, rot: -2, posMobile: [62, 27], wMobile: 90,
+      id: 'consuming-remnants', bucket: 'consuming',
+      title: 'Remnants of a Separation',
+      image: 'assets/cards/consuming-remnants.webp', ratio: 1,
+      why: 'Aanchal Malhotra’s history of Partition, told through the objects people carried across the border. I love reading about pre-independence India, and this book is especially meaningful to me.',
+      pos: [73, 9], w: 165, rot: -2, posMobile: [61, 24], wMobile: 68,
+    },
+    {
+      id: 'consuming-dosa', bucket: 'consuming',
+      title: 'Dosa, always',
+      image: 'assets/cards/consuming-dosa.webp', ratio: 1,
+      why: 'Growing up I ate dosa at least a few times a week, and it’s still one of my favourite things. I keep a record of every kind I try.',
+      pos: [88, 12], w: 165, rot: 2.5, posMobile: [86, 44], wMobile: 68,
+    },
+    {
+      id: 'consuming-tissot', bucket: 'consuming',
+      title: 'Looking closely at paintings',
+      image: 'assets/cards/consuming-tissot.webp', ratio: 1,
+      why: 'James Tissot’s portrait of the Marquise de Miramon (1866) at the Getty: the pink silk gown, the crane screen and the bust of Marie Antoinette on the mantel. Spending time with paintings like this feeds straight into my own work.',
+      pos: [82, 33], w: 165, rot: -1.5, posMobile: [62, 45], wMobile: 68,
     },
 
     // ── pop culture quotes I live by ────────────────────────
@@ -102,7 +116,7 @@ window.MAP_DATA = {
       title: 'Colour of the month',
       image: 'assets/cards/appreciating-01.svg', ratio: 1.19,
       why: 'Placeholder. A colour I keep noticing everywhere and adding to everything.',
-      pos: [89, 44], w: 170, rot: -2.5, posMobile: [87, 9], wMobile: 72,
+      pos: [90, 53], w: 170, rot: -2.5, posMobile: [86, 8], wMobile: 68,
     },
     {
       id: 'appreciating-02', bucket: 'appreciating',
