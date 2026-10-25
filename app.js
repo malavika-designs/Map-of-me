@@ -381,6 +381,8 @@
   }
 
   // ── go ───────────────────────────────────────────────
+  // ?embed=1 hides the hint, for a cleaner look inside another site
+  if (/[?&]embed=1\b/.test(location.search)) document.documentElement.classList.add('embed');
   layout();
   startEntrance();
   window.addEventListener('resize', layout);
