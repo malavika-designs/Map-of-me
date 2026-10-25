@@ -4,7 +4,6 @@
   --thread: #d9262b;
   --blue: #1238e8;
   --muted: #6b6b6b;
-  --serif: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
   --sans: 'Geist', 'Helvetica Neue', Arial, sans-serif;
   --mono: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
 }
@@ -105,15 +104,15 @@ html, body {
   box-shadow: 0 0 0 3px #fff;
 }
 .knot-label {
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 400;
-  font-size: 24px;
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: -.005em;
   color: var(--thread);
   line-height: 1;
-  background: rgba(255,255,255,.85);
-  padding: 0 4px 2px;
-  border-radius: 3px;
+  background: rgba(255,255,255,.9);
+  padding: 4px 8px 5px;
+  border-radius: 999px;
 }
 
 .hint {
@@ -137,7 +136,10 @@ html, body {
   background: rgba(255,255,255,.35);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity .26s ease-out;
 }
+.paper.is-open { opacity: 1; }
 .paper-sheet {
   position: absolute;
   inset: 3.5vh 3vw;
@@ -158,8 +160,11 @@ html, body {
   justify-content: center;
   gap: clamp(24px, 4vw, 64px);
   padding: 8vh 8vw;
+  overflow-y: auto;
 }
 .paper[hidden], .viewer[hidden] { display: none; }
+/* while fading in or out, clicks pass through to the map */
+.paper:not(.is-open), .viewer:not(.is-open) { pointer-events: none; }
 
 .viewer-card {
   margin: 0;
@@ -175,21 +180,33 @@ html, body {
   height: auto;
 }
 
-.viewer-text { max-width: 340px; }
+.viewer-text {
+  max-width: 340px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .16s ease-in, transform .16s ease-in;
+}
+.viewer.is-open .viewer-text {
+  opacity: 1;
+  transform: none;
+  transition: opacity .42s ease-out .2s, transform .42s ease-out .2s;
+}
 .viewer-bucket {
-  margin: 0 0 8px;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 24px;
+  margin: 0 0 10px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
   color: var(--thread);
 }
 .viewer-title {
   margin: 0 0 22px;
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(34px, 3.4vw, 52px);
-  line-height: 1;
-  letter-spacing: -.01em;
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: clamp(26px, 2.6vw, 38px);
+  line-height: 1.08;
+  letter-spacing: -.02em;
   color: var(--ink);
   text-wrap: balance;
 }
@@ -228,35 +245,35 @@ html, body {
 @media (max-width: 999px) {
   .viewer {
     grid-template-columns: 1fr;
-    align-content: center;
+    align-content: safe center;
     justify-items: center;
     gap: 22px;
     padding: 64px 28px 40px;
   }
   .viewer-card { justify-self: center; }
-  .viewer-card img { max-width: min(78vw, 520px); max-height: 52vh; }
+  .viewer-card img { max-width: min(78vw, 520px); max-height: 46vh; }
   .viewer-text { width: 100%; max-width: 520px; }
 }
 
 @media (max-width: 699px) {
-  .knot-label { font-size: 17px; }
+  .knot-label { font-size: 13px; padding: 3px 7px 4px; }
   .knot-dot { width: 7px; height: 7px; }
   .hint { display: none; }
 
   .viewer {
     grid-template-columns: 1fr;
-    align-content: center;
+    align-content: safe center;
     justify-items: center;
     gap: 22px;
     padding: 64px 28px 40px;
   }
   .viewer-card { justify-self: center; }
-  .viewer-card img { max-width: 78vw; max-height: 48vh; }
+  .viewer-card img { max-width: 78vw; max-height: 44vh; }
   .viewer-text { text-align: left; width: 100%; }
   .viewer-why { font-size: 16px; }
   .viewer-close { top: calc(3.5vh + 6px); right: calc(3vw + 8px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card { transition: none; }
+  .card, .paper, .viewer-text, .viewer.is-open .viewer-text { transition: none; }
 }

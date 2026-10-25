@@ -15,7 +15,7 @@ window.MAP_DATA = {
   buckets: [
     { id: 'making',     label: 'making',              pos: [36, 48], posMobile: [34, 37] },
     { id: 'consuming',  label: 'consuming',           pos: [66, 24], posMobile: [64, 36] },
-    { id: 'references', label: 'pop culture quotes I live by', pos: [30, 24], posMobile: [6, 17] },
+    { id: 'references', label: 'channeling', pos: [30, 24], posMobile: [6, 17] },
     { id: 'appreciating', label: 'appreciating',       pos: [68, 50], posMobile: [74, 19] },
   ],
 
@@ -80,7 +80,7 @@ window.MAP_DATA = {
       pos: [82, 33], w: 165, rot: -1.5, posMobile: [62, 45], wMobile: 68,
     },
 
-    // ── pop culture quotes I live by ────────────────────────
+    // ── channeling ──────────────────────────────────────────
     {
       id: 'quote-elle', bucket: 'references',
       title: 'What, like it’s hard?',

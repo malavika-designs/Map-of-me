@@ -169,19 +169,23 @@
     });
     const end = (e) => {
       if (!drag || drag.node !== n || e.pointerId !== drag.id) return;
-      const wasClick = !drag.moved;
+      // remember a drag so the click that follows it doesn't open the card
+      n.justDragged = drag.moved;
       n.dragging = false;
       n.el.classList.remove('dragging');
       drag = null;
-      if (wasClick && e.type === 'pointerup' && n.kind === 'card') openCard(n);
     };
     n.el.addEventListener('pointerup', end);
     n.el.addEventListener('pointercancel', end);
   }
 
+  // Cards open on their own click (mouse, touch, Enter or Space), so the
+  // opening click can never land on the pop-up as a second click.
   for (const n of cards) {
-    n.el.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openCard(n); }
+    n.el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (n.justDragged) { n.justDragged = false; return; }
+      openCard(n);
     });
   }
 
@@ -282,72 +286,65 @@
   const vImg = document.getElementById('viewer-img');
   const closeBtn = document.getElementById('viewer-close');
   let open = null;
-  let closing = null; // the close animation still running, if any
+  let openedAt = 0;
+  let hideTimer = 0;
+  const FADE_MS = reduceMotion ? 0 : 380;
 
-  // Drop every running or filled animation on the viewer so a fresh open
-  // never inherits a half-finished fade (that's what hid the text).
-  function resetViewer() {
-    if (closing) { closing.onfinish = null; closing = null; }
-    for (const el of [paper, sheet, vCard, vText]) el.getAnimations().forEach((a) => a.cancel());
-    vImg.onload = null;
-    paper.style.pointerEvents = viewer.style.pointerEvents = '';
-  }
-
+  // Open/closed is a class on the paper and viewer; CSS fades them. Web
+  // Animations only move the card, and never hold a state after finishing.
   function openCard(n) {
     if (open) return;
-    const prev = cards.find((c) => c.el.classList.contains('is-open'));
-    if (prev && prev !== n) prev.el.classList.remove('is-open');
-    resetViewer();
+    clearTimeout(hideTimer);
+    vCard.getAnimations().forEach((a) => a.cancel());
+    cards.forEach((c) => c !== n && c.el.classList.remove('is-open'));
     open = n;
     openedAt = performance.now();
     const d = n.data;
+    vImg.onload = null;
     vImg.src = d.image;
     vImg.alt = d.title;
-    document.getElementById('viewer-bucket').textContent = `↳ ${bucketLabel(d.bucket)}`;
+    document.getElementById('viewer-bucket').textContent = bucketLabel(d.bucket);
     document.getElementById('viewer-title').textContent = d.title;
     document.getElementById('viewer-why').textContent = d.why;
 
     paper.hidden = false;
     viewer.hidden = false;
+    viewer.scrollTop = 0;
     n.el.classList.add('is-open');
-
-    const go = () => {
+    // next frame, so the fade-in transition runs from the hidden state
+    requestAnimationFrame(() => requestAnimationFrame(() => {
       if (open !== n) return;
-      const flip = flipFrom(n);
-      const ease = 'cubic-bezier(.2, 1.15, .35, 1)';
-      vCard.animate([{ transform: flip }, { transform: 'none' }], { duration: reduceMotion ? 1 : 640, easing: ease });
-      paper.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260, easing: 'ease-out' });
+      paper.classList.add('is-open');
+      viewer.classList.add('is-open');
+    }));
+
+    const fly = () => {
+      if (open !== n) return;
+      vCard.animate([{ transform: flipFrom(n) }, { transform: 'none' }], { duration: reduceMotion ? 1 : 640, easing: 'cubic-bezier(.2, 1.15, .35, 1)' });
       sheet.animate(
         [{ transform: 'translateY(-24px) rotate(-1.8deg) scale(1.03)' }, { transform: 'rotate(-.5deg)' }],
         { duration: reduceMotion ? 1 : 520, easing: 'cubic-bezier(.2, .9, .3, 1)' },
       );
-      vText.animate(
-        [{ opacity: 0, transform: 'translateY(10px)' }, { opacity: 1, transform: 'none' }],
-        { duration: 420, delay: 200, easing: 'ease-out', fill: 'backwards' },
-      );
-      closeBtn.focus({ preventScroll: true });
     };
-    if (vImg.complete && vImg.naturalWidth) go(); else vImg.onload = go;
+    if (vImg.complete && vImg.naturalWidth) fly(); else vImg.onload = fly;
+    closeBtn.focus({ preventScroll: true });
   }
 
   function closeCard() {
     if (!open) return;
     const n = open;
     open = null;
-    const flip = flipFrom(n);
-    const dur = reduceMotion ? 1 : 380;
-    // let clicks fall through to the map while the paper fades away
-    paper.style.pointerEvents = viewer.style.pointerEvents = 'none';
-    vText.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 160, fill: 'forwards' });
-    paper.animate([{ opacity: 1 }, { opacity: 0 }], { duration: dur, easing: 'ease-in', fill: 'forwards' });
-    closing = vCard.animate([{ transform: 'none' }, { transform: flip }], { duration: dur, easing: 'cubic-bezier(.5, 0, .2, 1)', fill: 'forwards' });
-    closing.onfinish = () => {
-      resetViewer();
+    paper.classList.remove('is-open');
+    viewer.classList.remove('is-open');
+    vCard.getAnimations().forEach((a) => a.cancel());
+    vCard.animate([{ transform: 'none' }, { transform: flipFrom(n) }], { duration: FADE_MS || 1, easing: 'cubic-bezier(.5, 0, .2, 1)' });
+    hideTimer = setTimeout(() => {
       paper.hidden = true;
       viewer.hidden = true;
+      vCard.getAnimations().forEach((a) => a.cancel());
       n.el.classList.remove('is-open');
       n.el.focus({ preventScroll: true });
-    };
+    }, FADE_MS);
   }
 
   // Transform that makes the viewer card sit exactly on top of the map card.
@@ -360,13 +357,12 @@
   }
 
   closeBtn.addEventListener('click', closeCard);
-  // Close on a click on the paper, but only one that started on the paper:
-  // the click that opened the card can land here on some browsers.
-  let openedAt = 0;
+  // Close on a click on the paper, only if the press also started on the
+  // paper and the card has been open a moment.
   let downOnPaper = false;
   viewer.addEventListener('pointerdown', (e) => { downOnPaper = e.target === viewer; });
   viewer.addEventListener('click', (e) => {
-    if (e.target === viewer && downOnPaper && performance.now() - openedAt > 350) closeCard();
+    if (e.target === viewer && downOnPaper && performance.now() - openedAt > 400) closeCard();
     downOnPaper = false;
   });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCard(); });
