@@ -14,7 +14,7 @@ python3 -m http.server 8000   # then visit http://localhost:8000
 
 It's served by GitHub Pages at https://malavika-designs.github.io/Map-of-me/ once Pages is on (Settings → Pages → Deploy from a branch → this branch, `/ (root)`).
 
-In Framer, add an **Embed** component, set Type to URL and paste the address. Add `?embed=1` to hide the "pull a thread" hint. The map fills whatever size the embed is; give phones a taller embed, since the phone layout is portrait.
+In Framer, add an **Embed** component, set Type to URL and paste the address. The map fills whatever size the embed is; give phones a taller embed, since the phone layout is portrait.
 
 ## Swap or add a card
 

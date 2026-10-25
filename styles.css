@@ -115,18 +115,6 @@ html, body {
   border-radius: 999px;
 }
 
-.hint {
-  position: absolute;
-  left: max(16px, env(safe-area-inset-left, 0px));
-  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-  margin: 0;
-  z-index: 6;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: .04em;
-  color: var(--muted);
-  pointer-events: none;
-}
 
 /* ── paper overlay + viewer ────────────────────────── */
 .paper {
@@ -165,7 +153,6 @@ html, body {
 .paper[hidden], .viewer[hidden] { display: none; }
 /* while fading in or out, clicks pass through to the map */
 .paper:not(.is-open), .viewer:not(.is-open) { pointer-events: none; }
-.embed .hint { display: none; }
 
 .viewer-card {
   margin: 0;
@@ -259,7 +246,6 @@ html, body {
 @media (max-width: 699px) {
   .knot-label { font-size: 13px; padding: 3px 7px 4px; }
   .knot-dot { width: 7px; height: 7px; }
-  .hint { display: none; }
 
   .viewer {
     grid-template-columns: 1fr;

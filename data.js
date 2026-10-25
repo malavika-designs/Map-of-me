@@ -7,7 +7,7 @@
 
 window.MAP_DATA = {
   me: {
-    image: 'assets/me.webp',
+    image: 'assets/me-bw.webp', // colour version: 'assets/me.webp'
     // Where the strings leave the head, as a fraction of the cut-out image.
     head: [0.388, 0.018],
   },
@@ -86,14 +86,14 @@ window.MAP_DATA = {
       title: 'What, like it’s hard?',
       image: 'assets/cards/quote-elle.webp', ratio: 1,
       why: 'Elle Woods, Legally Blonde. I channelled her as a kid when I wanted to top my boards, and it really helped.',
-      pos: [9, 14], w: 165, rot: -2.5, posMobile: [13, 7], wMobile: 74,
+      pos: [9, 14], w: 165, rot: -2.5, posMobile: [11, 7], wMobile: 72,
     },
     {
       id: 'quote-soul', bucket: 'references',
       title: 'The joys of life are found in the simplest things',
       image: 'assets/cards/quote-soul.webp', ratio: 1,
       why: 'Soul. There’s no script, and there will always be things to figure out. Enjoying the smaller things in life is what keeps me grounded.',
-      pos: [37, 10], w: 165, rot: 2.5, posMobile: [35, 8], wMobile: 70,
+      pos: [37, 10], w: 165, rot: 2.5, posMobile: [37, 9], wMobile: 68,
     },
     {
       id: 'quote-ron', bucket: 'references',
@@ -130,14 +130,14 @@ window.MAP_DATA = {
       title: 'Learning to love nature',
       image: 'assets/cards/appreciating-rainier.webp', ratio: 1,
       why: 'Since moving to Seattle I’ve really grown to appreciate nature, and I’ve been going on more and more hikes.',
-      pos: [92, 84], w: 160, rot: 1.5, posMobile: [86, 60], wMobile: 64,
+      pos: [92, 84], w: 160, rot: 1.5, posMobile: [89, 60], wMobile: 64,
     },
     {
       id: 'appreciating-hike', bucket: 'appreciating',
       title: 'The slow burn of a hike',
       image: 'assets/cards/appreciating-hike.webp', ratio: 1,
       why: 'What I like most about hiking is the slow burn. Physically, you have no option but to stay present.',
-      pos: [67, 84], w: 160, rot: -2, posMobile: [70, 62], wMobile: 60,
+      pos: [67, 84], w: 160, rot: -2, posMobile: [64, 64], wMobile: 60,
     },
   ],
 };

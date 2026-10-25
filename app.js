@@ -7,7 +7,7 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const SVGNS = 'http://www.w3.org/2000/svg';
 
-  let W = 0, H = 0, mobile = false, cardScale = 1;
+  let W = 0, H = 0, mobile = false, cardScale = 1, pad = 24;
   const head = { x: 0, y: 0 };
 
   // ── build ────────────────────────────────────────────
@@ -100,12 +100,15 @@
     mobile = W < 700;
     cardScale = mobile ? W / 390 : clamp(Math.min(W / 1440, H / 900), 0.6, 1.5);
 
+    // breathing room on every side; nothing comes closer to the edge than this
+    pad = mobile ? 14 : clamp(Math.min(W, H) * 0.04, 20, 56);
+
     // the figure sits bottom-centre; the web fills the space around it
     const ratio = me.naturalWidth ? me.naturalHeight / me.naturalWidth : 2;
-    const h = mobile ? Math.min(H * 0.42, W * 0.5 * ratio) : Math.min(H * 0.64, W * 0.22 * ratio);
+    const h = mobile ? Math.min(H * 0.4, W * 0.5 * ratio) : Math.min(H * 0.62, W * 0.22 * ratio);
     const w = h / ratio;
     const left = (W - w) / 2;
-    const top = H - h;
+    const top = H - h - pad;
     Object.assign(me.style, { width: `${w}px`, left: `${left}px`, top: `${top}px` });
     head.x = left + D.me.head[0] * w;
     head.y = top + D.me.head[1] * h;
@@ -113,8 +116,8 @@
     for (const id in knots) {
       const k = knots[id];
       const p = (mobile && k.data.posMobile) || k.data.pos;
-      k.home.x = (p[0] / 100) * W;
-      k.home.y = (p[1] / 100) * H;
+      k.home.x = inX(p[0]);
+      k.home.y = inY(p[1]);
       const dot = k.el.firstElementChild;
       k.dot = { x: dot.offsetLeft + dot.offsetWidth / 2, y: dot.offsetTop + dot.offsetHeight / 2 };
     }
@@ -125,10 +128,17 @@
       n.h = n.w * d.ratio;
       n.el.style.width = `${n.w}px`;
       n.el.style.height = `${n.h}px`;
-      n.home.x = (p[0] / 100) * W;
-      n.home.y = (p[1] / 100) * H;
+      // place within the padded area, then make sure the whole card (plus
+      // its tilt and gentle drift) stays clear of the edges
+      const mx = pad + n.w / 2 + 14, my = pad + n.h / 2 + 14;
+      n.home.x = clamp(inX(p[0]), mx, W - mx);
+      n.home.y = clamp(inY(p[1]), my, H - my);
     }
   }
+
+  // Data positions are percentages of the padded area, not the raw screen.
+  function inX(pct) { return pad + (pct / 100) * (W - 2 * pad); }
+  function inY(pct) { return pad + (pct / 100) * (H - 2 * pad); }
 
   // ── drag ─────────────────────────────────────────────
   let drag = null;
@@ -381,8 +391,6 @@
   }
 
   // ── go ───────────────────────────────────────────────
-  // ?embed=1 hides the hint, for a cleaner look inside another site
-  if (/[?&]embed=1\b/.test(location.search)) document.documentElement.classList.add('embed');
   layout();
   startEntrance();
   window.addEventListener('resize', layout);
