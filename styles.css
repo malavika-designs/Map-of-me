@@ -5,7 +5,7 @@
   --blue: #1238e8;
   --muted: #6b6b6b;
   --sans: 'Geist', 'Helvetica Neue', Arial, sans-serif;
-  --mono: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
+  --soft: #a3a3a3;
 }
 
 * { box-sizing: border-box; }
@@ -181,12 +181,9 @@ html, body {
 }
 .viewer-bucket {
   margin: 0 0 10px;
-  font-family: var(--mono);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 500;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--thread);
+  color: var(--soft);
 }
 .viewer-title {
   margin: 0 0 22px;
@@ -200,11 +197,8 @@ html, body {
 }
 .viewer-label {
   margin: 0 0 6px;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--muted);
+  font-size: 13px;
+  color: var(--soft);
 }
 .viewer-why {
   margin: 0;
@@ -219,13 +213,14 @@ html, body {
   right: calc(3vw + 22px);
   border: 0;
   background: none;
-  font-family: var(--mono);
-  font-size: 13px;
-  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--soft);
   cursor: pointer;
   padding: 8px;
 }
-.viewer-close:hover { color: var(--thread); }
+.viewer-close:hover, .viewer-close:focus-visible { color: var(--ink); }
+.viewer:focus { outline: none; }
 .viewer-close:focus-visible { outline: 2px solid var(--blue); }
 
 /* ── mobile ────────────────────────────────────────── */

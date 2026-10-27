@@ -8,6 +8,7 @@
   const SVGNS = 'http://www.w3.org/2000/svg';
 
   let W = 0, H = 0, mobile = false, cardScale = 1, pad = 24;
+  const CARD_SCALE = 0.8; // shrink or grow every card at once
   const head = { x: 0, y: 0 };
 
   // ── build ────────────────────────────────────────────
@@ -98,14 +99,14 @@
     W = stage.clientWidth;
     H = stage.clientHeight;
     mobile = W < 700;
-    cardScale = mobile ? W / 390 : clamp(Math.min(W / 1440, H / 900), 0.6, 1.5);
+    cardScale = CARD_SCALE * (mobile ? W / 390 : clamp(Math.min(W / 1440, H / 900), 0.6, 1.5));
 
     // breathing room on every side; nothing comes closer to the edge than this
     pad = mobile ? 14 : clamp(Math.min(W, H) * 0.04, 20, 56);
 
     // the figure sits bottom-centre; the web fills the space around it
     const ratio = me.naturalWidth ? me.naturalHeight / me.naturalWidth : 2;
-    const h = mobile ? Math.min(H * 0.4, W * 0.5 * ratio) : Math.min(H * 0.62, W * 0.22 * ratio);
+    const h = mobile ? Math.min(H * 0.37, W * 0.46 * ratio) : Math.min(H * 0.56, W * 0.2 * ratio);
     const w = h / ratio;
     const left = (W - w) / 2;
     const top = H - h - pad;
@@ -337,7 +338,7 @@
       );
     };
     if (vImg.complete && vImg.naturalWidth) fly(); else vImg.onload = fly;
-    closeBtn.focus({ preventScroll: true });
+    viewer.focus({ preventScroll: true }); // the dialog, not the button, so it stays grey
   }
 
   function closeCard() {
